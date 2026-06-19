@@ -3,45 +3,75 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 )
 
 func main() {
 	// ==========================================
-	// KONVERSI TIPE DATA (TYPE CONVERSION) DI GO
+	// CONTROL FLOW DI GOLANG
 	// ==========================================
 
-	// 1. Konversi Antar Angka (Integer <-> Float)
-	var nilaiInt int = 42
-	var nilaiFloat float64 = float64(nilaiInt) // Mengonversi int ke float64
+	// 1. If - Else If - Else
+	var nilai int = 85
+	var grade string
 
-	var desimal float64 = 9.99
-	var bulat int = int(desimal) // Mengonversi float64 ke int (nilai desimal akan dibuang menjadi 9)
-
-	// 2. Konversi Ukuran Tipe Data
-	var angkaKecil int8 = 100
-	var angkaBesar int64 = int64(angkaKecil)
-
-	// 3. Konversi Integer ke String menggunakan strconv.Itoa()
-	var umur int = 25
-	// PENTING: string(umur) tidak akan menghasilkan teks "25", melainkan karakter ASCII dengan kode 25.
-	// Untuk mendapatkan string "25", kita harus menggunakan package 'strconv'
-	var umurString string = strconv.Itoa(umur)
-
-	// 4. Konversi String ke Integer menggunakan strconv.Atoi()
-	var stringAngka string = "100"
-	// strconv.Atoi mengembalikan 2 nilai: (hasil_angka, error)
-	angkaHasil, err := strconv.Atoi(stringAngka)
-	var statusKonversi string
-	if err != nil {
-		statusKonversi = "Gagal mengonversi string ke int"
+	if nilai >= 85 {
+		grade = "A"
+	} else if nilai >= 75 {
+		grade = "B"
+	} else if nilai >= 60 {
+		grade = "C"
 	} else {
-		statusKonversi = fmt.Sprintf("Sukses! Angka: %d", angkaHasil)
+		grade = "D"
 	}
 
-	// 5. Konversi String ke Float64 menggunakan strconv.ParseFloat()
-	var stringDesimal string = "3.1415"
-	floatHasil, _ := strconv.ParseFloat(stringDesimal, 64) // Mengabaikan error menggunakan '_' untuk demonstrasi singkat
+	// 2. If dengan Temporary Variable (Variabel Sementara)
+	// Variabel 'statusUjian' ditentukan berdasarkan 'kriteria' yang dideklarasikan langsung di dalam blok 'if'
+	var statusUjian string
+	if kriteria := 75; nilai >= kriteria {
+		statusUjian = "LULUS (Nilai di atas kriteria)"
+	} else {
+		statusUjian = "TIDAK LULUS"
+	}
+
+	// 3. Switch Case (Tanpa perlu menuliskan 'break')
+	var hari int = 3
+	var namaHari string
+	switch hari {
+	case 1:
+		namaHari = "Senin"
+	case 2:
+		namaHari = "Selasa"
+	case 3:
+		namaHari = "Rabu"
+	case 4:
+		namaHari = "Kamis"
+	case 5:
+		namaHari = "Jumat"
+	default:
+		namaHari = "Akhir Pekan"
+	}
+
+	// 4. For Loop (Satu-satunya keyword perulangan di Go!)
+	// A. Loop Standar (For biasa)
+	var hasilLoopBiasa string
+	for i := 1; i <= 3; i++ {
+		hasilLoopBiasa += fmt.Sprintf("Perulangan ke-%d, ", i)
+	}
+
+	// B. Loop bergaya While (For dengan satu kondisi saja)
+	var counter = 1
+	var hasilLoopWhile string
+	for counter <= 3 {
+		hasilLoopWhile += fmt.Sprintf("Iterasi %d; ", counter)
+		counter++
+	}
+
+	// C. For Range (Digunakan untuk mengiterasi slice/array/map/string)
+	frameworks := []string{"Go", "Docker", "Git"}
+	var hasilLoopRange string
+	for indeks, item := range frameworks {
+		hasilLoopRange += fmt.Sprintf("[%d: %s] ", indeks, item)
+	}
 
 	// Menampilkan data tersebut di halaman web dengan styling modern
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -52,7 +82,7 @@ func main() {
 			<head>
 				<meta charset="UTF-8">
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
-				<title>Belajar Konversi Tipe Data Go</title>
+				<title>Belajar Control Flow Go</title>
 				<style>
 					body {
 						font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -143,85 +173,76 @@ func main() {
 			</head>
 			<body>
 				<div class="container">
-					<h1>Konversi Tipe Data di Go</h1>
-					<p class="subtitle">Go tidak mendukung konversi implisit. Semua tipe data harus dikonversi secara eksplisit.</p>
+					<h1>Control Flow di Go</h1>
+					<p class="subtitle">Bagaimana mengontrol alur eksekusi program menggunakan Percabangan dan Perulangan.</p>
 					
 					<div class="grid">
-						<!-- Numeric Conversion -->
+						<!-- IF-ELSE Card -->
 						<div class="card">
-							<h2 class="card-title">1. Integer &lt;-&gt; Float</h2>
+							<h2 class="card-title">1. If - Else If - Else</h2>
 							<table>
 								<tr>
-									<td class="label">int ke float64 (float64(nilaiInt))</td>
-									<td class="value">%.2f</td>
-								</tr>
-								<tr>
-									<td class="label">float64 ke int (int(desimal))</td>
-									<td class="value">%d</td>
-								</tr>
-							</table>
-							<p class="desc">Saat mengonversi float ke int, bagian desimal di belakang koma akan **dibuang** (di-truncate), bukan dibulatkan ke atas.</p>
-						</div>
-
-						<!-- Size Conversion -->
-						<div class="card">
-							<h2 class="card-title">2. Konversi Ukuran Integer</h2>
-							<table>
-								<tr>
-									<td class="label">int8 (angkaKecil)</td>
+									<td class="label">Nilai Ujian</td>
 									<td class="value">%d</td>
 								</tr>
 								<tr>
-									<td class="label">int64 (angkaBesar)</td>
-									<td class="value">%d</td>
-								</tr>
-							</table>
-							<p class="desc">Mengonversi tipe yang lebih kecil ke besar aman dilakukan. Tapi hati-hati bila sebaliknya, jika nilainya melebihi batas tipe yang lebih kecil akan terjadi *overflow*.</p>
-						</div>
-
-						<!-- Integer to String (strconv.Itoa) -->
-						<div class="card">
-							<h2 class="card-title">3. Integer ke String</h2>
-							<table>
-								<tr>
-									<td class="label">int (umur = 25)</td>
-									<td class="value">%d</td>
-								</tr>
-								<tr>
-									<td class="label">string (strconv.Itoa(umur))</td>
-									<td class="value">"%s"</td>
-								</tr>
-							</table>
-							<p class="desc">Wajib menggunakan <span class="code">strconv.Itoa()</span> (Integer to ASCII). Jika langsung memakai <span class="code">string(25)</span>, Go akan mengonversinya menjadi karakter ASCII ke-25, bukan teks "25".</p>
-						</div>
-
-						<!-- String to Integer (strconv.Atoi) -->
-						<div class="card">
-							<h2 class="card-title">4. String ke Angka</h2>
-							<table>
-								<tr>
-									<td class="label">String ("100") -> int</td>
+									<td class="label">Grade Hasil</td>
 									<td class="value">%s</td>
 								</tr>
 								<tr>
-									<td class="label">String ("3.1415") -> float</td>
-									<td class="value">%.4f</td>
+									<td class="label">Status (If Temp Var)</td>
+									<td class="value">%s</td>
 								</tr>
 							</table>
-							<p class="desc">Fungsi <span class="code">strconv.Atoi()</span> mengembalikan dua nilai: hasil angka dan error. Kita harus mengoreksi error tersebut sebelum menggunakan hasilnya.</p>
+							<p class="desc">Go mendukung inisialisasi variabel sementara langsung di dalam statemen <code>if</code> sebelum kondisi dievaluasi. Sangat berguna untuk scope variabel yang sempit.</p>
+						</div>
+
+						<!-- SWITCH Card -->
+						<div class="card">
+							<h2 class="card-title">2. Switch Case</h2>
+							<table>
+								<tr>
+									<td class="label">Angka Hari</td>
+									<td class="value">%d</td>
+								</tr>
+								<tr>
+									<td class="label">Nama Hari</td>
+									<td class="value">%s</td>
+								</tr>
+							</table>
+							<p class="desc">Di Go, switch case secara default <strong>tidak butuh break</strong>. Eksekusi akan langsung keluar dari switch setelah case terpenuhi, kecuali Anda menggunakan keyword <code>fallthrough</code>.</p>
+						</div>
+
+						<!-- FOR Loop Card -->
+						<div class="card" style="grid-column: 1 / -1;">
+							<h2 class="card-title">3. For Loops (Satu-satunya Keyword Loop)</h2>
+							<table>
+								<tr>
+									<td class="label">For Standard (i:=1; i&lt;=3; i++)</td>
+									<td class="value">%s</td>
+								</tr>
+								<tr>
+									<td class="label">For While-Style (counter &lt;= 3)</td>
+									<td class="value">%s</td>
+								</tr>
+								<tr>
+									<td class="label">For Range (slice frameworks)</td>
+									<td class="value">%s</td>
+								</tr>
+							</table>
+							<p class="desc">Go hanya memiliki <strong>satu</strong> kata kunci untuk perulangan, yaitu <code>for</code>. Namun, <code>for</code> ini sangat fleksibel dan bisa ditulis dengan berbagai variasi gaya.</p>
 						</div>
 					</div>
 
 					<div class="footer">
-						Dijalankan di dalam Container Docker 🐳 | Belajar Konversi Tipe Data Go
+						Dijalankan di dalam Container Docker 🐳 | Belajar Control Flow Go
 					</div>
 				</div>
 			</body>
 			</html>
-		`, nilaiFloat, bulat,
-			angkaKecil, angkaBesar,
-			umur, umurString,
-			statusKonversi, floatHasil)
+		`, nilai, grade, statusUjian,
+			hari, namaHari,
+			hasilLoopBiasa, hasilLoopWhile, hasilLoopRange)
 	})
 
 	fmt.Println("Server Go berjalan di port 8080...")
