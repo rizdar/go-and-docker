@@ -3,37 +3,45 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 )
 
 func main() {
 	// ==========================================
-	// TIPE DATA PRIMITIF DI GOLANG
+	// KONVERSI TIPE DATA (TYPE CONVERSION) DI GO
 	// ==========================================
 
-	// 1. Boolean (bool)
-	var booleanBenar bool = true
-	var booleanSalah bool = false
+	// 1. Konversi Antar Angka (Integer <-> Float)
+	var nilaiInt int = 42
+	var nilaiFloat float64 = float64(nilaiInt) // Mengonversi int ke float64
 
-	// 2. Integer (Bilangan Bulat)
-	// Signed Integer (Bisa bernilai negatif)
-	var angkaBulatBiasa int = -42 // Mengikuti arsitektur OS (32-bit atau 64-bit)
-	var angkaKecil int8 = 127     // Rentang: -128 s/d 127
-	var angkaBesar int64 = 9223372036854775807
+	var desimal float64 = 9.99
+	var bulat int = int(desimal) // Mengonversi float64 ke int (nilai desimal akan dibuang menjadi 9)
 
-	// Unsigned Integer (Hanya positif dan nol)
-	var angkaPositif uint = 150
-	var angkaPositifKecil uint8 = 255 // Rentang: 0 s/d 255 (Sering disebut 'byte')
+	// 2. Konversi Ukuran Tipe Data
+	var angkaKecil int8 = 100
+	var angkaBesar int64 = int64(angkaKecil)
 
-	// 3. Floating Point (Bilangan Desimal)
-	var desimalBiasa float32 = 3.14
-	var desimalPresisi float64 = 3.141592653589793
+	// 3. Konversi Integer ke String menggunakan strconv.Itoa()
+	var umur int = 25
+	// PENTING: string(umur) tidak akan menghasilkan teks "25", melainkan karakter ASCII dengan kode 25.
+	// Untuk mendapatkan string "25", kita harus menggunakan package 'strconv'
+	var umurString string = strconv.Itoa(umur)
 
-	// 4. Character / Unicode Code Point
-	var karakterByte byte = 'A'  // byte adalah alias dari uint8, nilai ASCII 'A' adalah 65
-	var karakterRune rune = '🍎' // rune adalah alias dari int32, digunakan untuk menyimpan karakter Unicode (UTF-8)
+	// 4. Konversi String ke Integer menggunakan strconv.Atoi()
+	var stringAngka string = "100"
+	// strconv.Atoi mengembalikan 2 nilai: (hasil_angka, error)
+	angkaHasil, err := strconv.Atoi(stringAngka)
+	var statusKonversi string
+	if err != nil {
+		statusKonversi = "Gagal mengonversi string ke int"
+	} else {
+		statusKonversi = fmt.Sprintf("Sukses! Angka: %d", angkaHasil)
+	}
 
-	// 5. String (Teks)
-	var teks string = "Belajar Golang itu Seru!"
+	// 5. Konversi String ke Float64 menggunakan strconv.ParseFloat()
+	var stringDesimal string = "3.1415"
+	floatHasil, _ := strconv.ParseFloat(stringDesimal, 64) // Mengabaikan error menggunakan '_' untuk demonstrasi singkat
 
 	// Menampilkan data tersebut di halaman web dengan styling modern
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -44,7 +52,7 @@ func main() {
 			<head>
 				<meta charset="UTF-8">
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
-				<title>Belajar Tipe Data Primitif Go</title>
+				<title>Belajar Konversi Tipe Data Go</title>
 				<style>
 					body {
 						font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -64,8 +72,13 @@ func main() {
 					h1 {
 						color: #38bdf8;
 						text-align: center;
-						margin-bottom: 30px;
+						margin-bottom: 10px;
 						font-size: 2.5rem;
+					}
+					p.subtitle {
+						color: #94a3b8;
+						text-align: center;
+						margin-bottom: 30px;
 					}
 					.grid {
 						display: grid;
@@ -107,6 +120,13 @@ func main() {
 						padding: 2px 6px;
 						border-radius: 4px;
 					}
+					.code {
+						font-family: monospace;
+						color: #f43f5e;
+						background: #0f172a;
+						padding: 2px 4px;
+						border-radius: 4px;
+					}
 					.desc {
 						font-size: 0.85rem;
 						color: #64748b;
@@ -123,33 +143,30 @@ func main() {
 			</head>
 			<body>
 				<div class="container">
-					<h1>Tipe Data Primitif di Go</h1>
+					<h1>Konversi Tipe Data di Go</h1>
+					<p class="subtitle">Go tidak mendukung konversi implisit. Semua tipe data harus dikonversi secara eksplisit.</p>
 					
 					<div class="grid">
-						<!-- Boolean Card -->
+						<!-- Numeric Conversion -->
 						<div class="card">
-							<h2 class="card-title">1. Boolean (bool)</h2>
+							<h2 class="card-title">1. Integer &lt;-&gt; Float</h2>
 							<table>
 								<tr>
-									<td class="label">booleanBenar</td>
-									<td class="value">%t</td>
+									<td class="label">int ke float64 (float64(nilaiInt))</td>
+									<td class="value">%.2f</td>
 								</tr>
 								<tr>
-									<td class="label">booleanSalah</td>
-									<td class="value">%t</td>
-								</tr>
-							</table>
-							<p class="desc">Hanya menampung nilai kebenaran: true (benar) atau false (salah).</p>
-						</div>
-
-						<!-- Integer Card -->
-						<div class="card">
-							<h2 class="card-title">2. Integer (Bilangan Bulat)</h2>
-							<table>
-								<tr>
-									<td class="label">int (angkaBulatBiasa)</td>
+									<td class="label">float64 ke int (int(desimal))</td>
 									<td class="value">%d</td>
 								</tr>
+							</table>
+							<p class="desc">Saat mengonversi float ke int, bagian desimal di belakang koma akan **dibuang** (di-truncate), bukan dibulatkan ke atas.</p>
+						</div>
+
+						<!-- Size Conversion -->
+						<div class="card">
+							<h2 class="card-title">2. Konversi Ukuran Integer</h2>
+							<table>
 								<tr>
 									<td class="label">int8 (angkaKecil)</td>
 									<td class="value">%d</td>
@@ -158,74 +175,53 @@ func main() {
 									<td class="label">int64 (angkaBesar)</td>
 									<td class="value">%d</td>
 								</tr>
+							</table>
+							<p class="desc">Mengonversi tipe yang lebih kecil ke besar aman dilakukan. Tapi hati-hati bila sebaliknya, jika nilainya melebihi batas tipe yang lebih kecil akan terjadi *overflow*.</p>
+						</div>
+
+						<!-- Integer to String (strconv.Itoa) -->
+						<div class="card">
+							<h2 class="card-title">3. Integer ke String</h2>
+							<table>
 								<tr>
-									<td class="label">uint (angkaPositif)</td>
+									<td class="label">int (umur = 25)</td>
 									<td class="value">%d</td>
 								</tr>
 								<tr>
-									<td class="label">uint8 (angkaPositifKecil)</td>
-									<td class="value">%d</td>
-								</tr>
-							</table>
-							<p class="desc"><strong>int/uint</strong> otomatis menyesuaikan dengan OS (32/64 bit). Versi spesifik (int8 s/d int64) membatasi ukuran penyimpanan memori.</p>
-						</div>
-
-						<!-- Float Card -->
-						<div class="card">
-							<h2 class="card-title">3. Floating Point (Desimal)</h2>
-							<table>
-								<tr>
-									<td class="label">float32 (desimalBiasa)</td>
-									<td class="value">%.2f</td>
-								</tr>
-								<tr>
-									<td class="label">float64 (desimalPresisi)</td>
-									<td class="value">%.15f</td>
-								</tr>
-							</table>
-							<p class="desc">Digunakan untuk bilangan berkoma. float64 memiliki tingkat presisi angka di belakang koma yang jauh lebih tinggi daripada float32.</p>
-						</div>
-
-						<!-- Byte & Rune Card -->
-						<div class="card">
-							<h2 class="card-title">4. Byte & Rune (Karakter)</h2>
-							<table>
-								<tr>
-									<td class="label">byte (karakterByte - 'A')</td>
-									<td class="value">ASCII: %d (Karakter: %c)</td>
-								</tr>
-								<tr>
-									<td class="label">rune (karakterRune - '🍎')</td>
-									<td class="value">Unicode: %d (Karakter: %c)</td>
-								</tr>
-							</table>
-							<p class="desc"><strong>byte</strong> adalah alias dari uint8 (menyimpan ASCII). <strong>rune</strong> adalah alias dari int32 (menyimpan karakter Unicode seperti emoji).</p>
-						</div>
-
-						<!-- String Card -->
-						<div class="card" style="grid-column: 1 / -1;">
-							<h2 class="card-title">5. String (Teks)</h2>
-							<table>
-								<tr>
-									<td class="label">teks (string)</td>
+									<td class="label">string (strconv.Itoa(umur))</td>
 									<td class="value">"%s"</td>
 								</tr>
 							</table>
-							<p class="desc">Menyimpan sekumpulan karakter Unicode UTF-8 secara read-only. Dibuat dengan tanda kutip ganda.</p>
+							<p class="desc">Wajib menggunakan <span class="code">strconv.Itoa()</span> (Integer to ASCII). Jika langsung memakai <span class="code">string(25)</span>, Go akan mengonversinya menjadi karakter ASCII ke-25, bukan teks "25".</p>
+						</div>
+
+						<!-- String to Integer (strconv.Atoi) -->
+						<div class="card">
+							<h2 class="card-title">4. String ke Angka</h2>
+							<table>
+								<tr>
+									<td class="label">String ("100") -> int</td>
+									<td class="value">%s</td>
+								</tr>
+								<tr>
+									<td class="label">String ("3.1415") -> float</td>
+									<td class="value">%.4f</td>
+								</tr>
+							</table>
+							<p class="desc">Fungsi <span class="code">strconv.Atoi()</span> mengembalikan dua nilai: hasil angka dan error. Kita harus mengoreksi error tersebut sebelum menggunakan hasilnya.</p>
 						</div>
 					</div>
 
 					<div class="footer">
-						Dijalankan di dalam Container Docker 🐳 | Selamat Belajar Golang!
+						Dijalankan di dalam Container Docker 🐳 | Belajar Konversi Tipe Data Go
 					</div>
 				</div>
 			</body>
 			</html>
-		`, booleanBenar, booleanSalah,
-			angkaBulatBiasa, angkaKecil, angkaBesar, angkaPositif, angkaPositifKecil,
-			desimalBiasa, desimalPresisi,
-			karakterByte, karakterByte, karakterRune, karakterRune,
-			teks)
+		`, nilaiFloat, bulat,
+			angkaKecil, angkaBesar,
+			umur, umurString,
+			statusKonversi, floatHasil)
 	})
 
 	fmt.Println("Server Go berjalan di port 8080...")
