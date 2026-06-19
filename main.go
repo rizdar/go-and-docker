@@ -7,26 +7,35 @@ import (
 
 func main() {
 	// ==========================================
-	// DEKLARASI VARIABEL DI GOLANG
+	// TIPE DATA PRIMITIF DI GOLANG
 	// ==========================================
 
-	// 1. Deklarasi Eksplisit (var namaTipe tipeData)
-	var nama string = "Rizdar"
+	// 1. Boolean (bool)
+	var booleanBenar bool = true
+	var booleanSalah bool = false
 
-	// 2. Deklarasi dengan Type Inference (tipe data ditentukan otomatis oleh compiler)
-	var umur = 20 // Compiler mendeteksi tipe data integer (int)
+	// 2. Integer (Bilangan Bulat)
+	// Signed Integer (Bisa bernilai negatif)
+	var angkaBulatBiasa int = -42 // Mengikuti arsitektur OS (32-bit atau 64-bit)
+	var angkaKecil int8 = 127     // Rentang: -128 s/d 127
+	var angkaBesar int64 = 9223372036854775807
 
-	// 3. Deklarasi Singkat (Short Declaration) menggunakan operator ':='
-	// Hanya bisa digunakan di dalam body function (fungsi main, dll)
-	isBelajar := true // Compiler mendeteksi tipe data boolean (bool)
+	// Unsigned Integer (Hanya positif dan nol)
+	var angkaPositif uint = 150
+	var angkaPositifKecil uint8 = 255 // Rentang: 0 s/d 255 (Sering disebut 'byte')
 
-	// 4. Tipe data desimal (float64)
-	var ipk float64 = 3.85
+	// 3. Floating Point (Bilangan Desimal)
+	var desimalBiasa float32 = 3.14
+	var desimalPresisi float64 = 3.141592653589793
 
-	// 5. Konstanta (Constant) - Nilai yang tidak dapat diubah setelah dideklarasikan
-	const versiGo = "1.22"
+	// 4. Character / Unicode Code Point
+	var karakterByte byte = 'A'  // byte adalah alias dari uint8, nilai ASCII 'A' adalah 65
+	var karakterRune rune = '🍎' // rune adalah alias dari int32, digunakan untuk menyimpan karakter Unicode (UTF-8)
 
-	// Menampilkan data tersebut di halaman web
+	// 5. String (Teks)
+	var teks string = "Belajar Golang itu Seru!"
+
+	// Menampilkan data tersebut di halaman web dengan styling modern
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		fmt.Fprintf(w, `
@@ -34,100 +43,189 @@ func main() {
 			<html lang="id">
 			<head>
 				<meta charset="UTF-8">
-				<title>Belajar Variabel & Tipe Data Go</title>
+				<meta name="viewport" content="width=device-width, initial-scale=1.0">
+				<title>Belajar Tipe Data Primitif Go</title>
 				<style>
 					body {
-						font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+						font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 						background-color: #0f172a;
 						color: #e2e8f0;
+						margin: 0;
+						padding: 40px 20px;
 						display: flex;
-						justify-content: center;
+						flex-direction: column;
 						align-items: center;
 						min-height: 100vh;
-						margin: 0;
 					}
-					.card {
-						background: #1e293b;
-						padding: 30px;
-						border-radius: 16px;
-						box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-						max-width: 450px;
+					.container {
+						max-width: 800px;
 						width: 100%%;
-						border: 1px solid #334155;
 					}
 					h1 {
 						color: #38bdf8;
-						font-size: 24px;
-						margin-top: 0;
 						text-align: center;
-						border-bottom: 2px solid #334155;
-						padding-bottom: 15px;
+						margin-bottom: 30px;
+						font-size: 2.5rem;
 					}
-					ul {
-						list-style: none;
-						padding: 0;
-						margin: 20px 0;
+					.grid {
+						display: grid;
+						grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+						gap: 20px;
 					}
-					li {
-						padding: 12px 0;
+					.card {
+						background: #1e293b;
+						border-radius: 12px;
+						padding: 24px;
+						border: 1px solid #334155;
+						box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+					}
+					.card-title {
+						font-size: 1.25rem;
+						color: #38bdf8;
+						margin-top: 0;
+						margin-bottom: 15px;
 						border-bottom: 1px solid #334155;
-						display: flex;
-						justify-content: space-between;
-						align-items: center;
+						padding-bottom: 10px;
 					}
-					li:last-child {
-						border-bottom: none;
+					table {
+						width: 100%%;
+						border-collapse: collapse;
+					}
+					td {
+						padding: 8px 0;
 					}
 					.label {
-						font-weight: 600;
 						color: #94a3b8;
+						font-weight: 500;
 					}
 					.value {
-						font-family: 'Courier New', Courier, monospace;
+						text-align: right;
+						font-family: monospace;
 						color: #34d399;
 						font-weight: bold;
 						background: #0f172a;
-						padding: 4px 8px;
-						border-radius: 6px;
+						padding: 2px 6px;
+						border-radius: 4px;
+					}
+					.desc {
+						font-size: 0.85rem;
+						color: #64748b;
+						margin-top: 15px;
+						line-height: 1.4;
 					}
 					.footer {
 						text-align: center;
-						font-size: 12px;
+						margin-top: 40px;
 						color: #64748b;
-						margin-top: 20px;
+						font-size: 0.9rem;
 					}
 				</style>
 			</head>
 			<body>
-				<div class="card">
-					<h1>Variabel & Tipe Data Go</h1>
-					<ul>
-						<li>
-							<span class="label">Nama (string)</span>
-							<span class="value">%s</span>
-						</li>
-						<li>
-							<span class="label">Umur (int)</span>
-							<span class="value">%d tahun</span>
-						</li>
-						<li>
-							<span class="label">Belajar Go (bool)</span>
-							<span class="value">%t</span>
-						</li>
-						<li>
-							<span class="label">IPK (float64)</span>
-							<span class="value">%.2f</span>
-						</li>
-						<li>
-							<span class="label">Versi Go (const)</span>
-							<span class="value">%s</span>
-						</li>
-					</ul>
-					<div class="footer">Dijalankan di dalam Container Docker 🐳</div>
+				<div class="container">
+					<h1>Tipe Data Primitif di Go</h1>
+					
+					<div class="grid">
+						<!-- Boolean Card -->
+						<div class="card">
+							<h2 class="card-title">1. Boolean (bool)</h2>
+							<table>
+								<tr>
+									<td class="label">booleanBenar</td>
+									<td class="value">%t</td>
+								</tr>
+								<tr>
+									<td class="label">booleanSalah</td>
+									<td class="value">%t</td>
+								</tr>
+							</table>
+							<p class="desc">Hanya menampung nilai kebenaran: true (benar) atau false (salah).</p>
+						</div>
+
+						<!-- Integer Card -->
+						<div class="card">
+							<h2 class="card-title">2. Integer (Bilangan Bulat)</h2>
+							<table>
+								<tr>
+									<td class="label">int (angkaBulatBiasa)</td>
+									<td class="value">%d</td>
+								</tr>
+								<tr>
+									<td class="label">int8 (angkaKecil)</td>
+									<td class="value">%d</td>
+								</tr>
+								<tr>
+									<td class="label">int64 (angkaBesar)</td>
+									<td class="value">%d</td>
+								</tr>
+								<tr>
+									<td class="label">uint (angkaPositif)</td>
+									<td class="value">%d</td>
+								</tr>
+								<tr>
+									<td class="label">uint8 (angkaPositifKecil)</td>
+									<td class="value">%d</td>
+								</tr>
+							</table>
+							<p class="desc"><strong>int/uint</strong> otomatis menyesuaikan dengan OS (32/64 bit). Versi spesifik (int8 s/d int64) membatasi ukuran penyimpanan memori.</p>
+						</div>
+
+						<!-- Float Card -->
+						<div class="card">
+							<h2 class="card-title">3. Floating Point (Desimal)</h2>
+							<table>
+								<tr>
+									<td class="label">float32 (desimalBiasa)</td>
+									<td class="value">%.2f</td>
+								</tr>
+								<tr>
+									<td class="label">float64 (desimalPresisi)</td>
+									<td class="value">%.15f</td>
+								</tr>
+							</table>
+							<p class="desc">Digunakan untuk bilangan berkoma. float64 memiliki tingkat presisi angka di belakang koma yang jauh lebih tinggi daripada float32.</p>
+						</div>
+
+						<!-- Byte & Rune Card -->
+						<div class="card">
+							<h2 class="card-title">4. Byte & Rune (Karakter)</h2>
+							<table>
+								<tr>
+									<td class="label">byte (karakterByte - 'A')</td>
+									<td class="value">ASCII: %d (Karakter: %c)</td>
+								</tr>
+								<tr>
+									<td class="label">rune (karakterRune - '🍎')</td>
+									<td class="value">Unicode: %d (Karakter: %c)</td>
+								</tr>
+							</table>
+							<p class="desc"><strong>byte</strong> adalah alias dari uint8 (menyimpan ASCII). <strong>rune</strong> adalah alias dari int32 (menyimpan karakter Unicode seperti emoji).</p>
+						</div>
+
+						<!-- String Card -->
+						<div class="card" style="grid-column: 1 / -1;">
+							<h2 class="card-title">5. String (Teks)</h2>
+							<table>
+								<tr>
+									<td class="label">teks (string)</td>
+									<td class="value">"%s"</td>
+								</tr>
+							</table>
+							<p class="desc">Menyimpan sekumpulan karakter Unicode UTF-8 secara read-only. Dibuat dengan tanda kutip ganda.</p>
+						</div>
+					</div>
+
+					<div class="footer">
+						Dijalankan di dalam Container Docker 🐳 | Selamat Belajar Golang!
+					</div>
 				</div>
 			</body>
 			</html>
-		`, nama, umur, isBelajar, ipk, versiGo)
+		`, booleanBenar, booleanSalah,
+			angkaBulatBiasa, angkaKecil, angkaBesar, angkaPositif, angkaPositifKecil,
+			desimalBiasa, desimalPresisi,
+			karakterByte, karakterByte, karakterRune, karakterRune,
+			teks)
 	})
 
 	fmt.Println("Server Go berjalan di port 8080...")
@@ -135,4 +233,3 @@ func main() {
 		panic(err)
 	}
 }
-
